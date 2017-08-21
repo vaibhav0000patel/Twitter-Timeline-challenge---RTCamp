@@ -82,7 +82,7 @@
                         <span class="icon-bar"></span>
                     </button>
 
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="index.php">
                         <h1><img src="images/rtcamp-logo.svg" style="width:208px;" alt="logo"></h1>
                     </a>
                     
@@ -152,7 +152,19 @@
 						
 							<div id="carousel-container" style="margin-bottom:30px;">
 								
-								<h2 class="page-header" style="margin-bottom:45px;"><span id="twitter_user_name" >Home Timeline</span> Tweets <span class="carousel-container-se-pre-con" style="display:none;"><image src="images/ajax-loader.gif" ></span></h2>
+								<h2 class="page-header" style="margin-bottom:45px;">
+									<span id="twitter_user_name" >Home Timeline</span> Tweets 
+									<span class="carousel-container-se-pre-con" style="display:none;">
+										<image src="images/ajax-loader.gif" >
+									</span>
+									<span style="margin:0px;" align="right">
+										<a href="download_tweets_pdf.php/?screen_name=hometimeline" id="user_tweets_download_link" target="_blank" style="margin-left:7px;">
+											<button id="user_tweets_download_button" type="button" class="btn btn-md btn-success">
+												<i class="fa fa-download"></i> Download <span id="download_twitter_user_name" >Home Timeline</span> Tweets(PDF)
+											</button>
+										</a>
+									</span>
+								</h2>
 								<div id="carousel-tweets" class="carousel slide" data-ride="carousel">
 									<ol class="carousel-indicators visible-xs">
 										<?php for($i=0;$i<sizeof($myHomeTweets);$i++){ ?>
@@ -191,7 +203,22 @@
 								
 									<?php $myTweets = $twClient->get('statuses/user_timeline', array('screen_name' => $username, 'count' => 10)); ?>
 								
-									<h2>My Tweets <span style="margin:0px;" align="right"><a href="download_tweets_csv.php" target="_blank" style="margin-left:7px;"><button type="button" class="btn btn-md btn-primary"><i class="fa fa-download"></i> Download My Tweets</button></a></span></h2>
+									<h2>My Tweets 
+										<span style="margin:0px;" align="right">
+											<a href="download_tweets_csv.php" target="_blank" style="margin-left:7px;">
+												<button type="button" class="btn btn-md btn-primary"><i class="fa fa-download">
+													</i> Download My Tweets(CSV)
+												</button>
+											</a>
+										</span>
+										<span style="margin:0px;" align="right">
+											<a href="download_tweets_pdf.php/?screen_name=<?php echo $username; ?>" id="user_tweets_download_link" target="_blank" style="margin-left:7px;">
+												<button id="user_tweets_download_button" type="button" class="btn btn-md btn-success">
+													<i class="fa fa-download"></i> Download My Tweets(PDF)
+												</button>
+											</a>
+										</span>
+									</h2>
 								
 									<div class="row" style="padding:10px; margin:0px; height: 700px;overflow: auto;">
 									
@@ -397,7 +424,7 @@
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-12">
-                    <div class="contact-form bottom">
+                    <!--<div class="contact-form bottom">
                         <h2>Send a message</h2>
                         <form id="main-contact-form" name="contact-form" method="post" action="sendemail.php">
                             <div class="form-group">
@@ -413,7 +440,7 @@
                                 <input type="submit" name="submit" class="btn btn-submit" value="Submit">
                             </div>
                         </form>
-                    </div>
+                    </div>-->
                 </div>
                 
             </div>
@@ -456,11 +483,12 @@
 			  $('input[name="search_follower"]').attr('id',follower);
 			  $('#search_followers_loader').show();
 			  $('input[name="search_follower"]').attr('disabled','disabled');
+			 
 			  $('#followers_name_list').empty();
 			  $.ajax({
 						 type: "POST",
 						 data:{fetch_users:'fetch_users',q:follower},
-						 url: "ajaxapi.php",
+						 url: "lib/ajaxapi.php",
 						
 						  success: function(result) 
 						 {
@@ -532,40 +560,45 @@
 				var screen_name = x.getAttribute("id");
 				if(screen_name==""){}else{
 					
+					$('#user_tweets_download_button').attr('disabled','disabled');
 					$(".carousel-container-se-pre-con").show();
 					$(".carousel").css('opacity','0.5');
+					
 					$.ajax({
 						 type: "POST",
 						 data:{fetch_tweets:'fetch_tweets',screen_name:screen_name},
-						 url: "ajaxapi.php", 
+						 url: "lib/ajaxapi.php", 
 						
 						  success: function(result) 
 						 {
-							 //alert(result);
-							
-							//$('#followers_list').append(result);
 							
 							$(".carousel-container-se-pre-con").fadeOut("slow");
 							$(".carousel").css('opacity','1');
 							$('.carousel-indicators').empty();
 							$('.carousel-inner').empty();
 							$('#twitter_user_name').html("@"+screen_name+"'s");
+							$('#download_twitter_user_name').html("@"+screen_name+"'s");
 							
 							
 							 response = JSON.parse(result);
 							
 								
 								
-									for(var i = 0; i < response.length; i++){
-										console.log(response[i].text); // Object with id and time
-										$('.carousel-indicators').append('<li data-target="#carousel-tweets" data-slide-to="'+i+'" '+((i==0)?'class="active"':'')+' ></li>');
-										$('.carousel-inner').append('<div class="item '+((i==0)?'active':'')+' "><div class="main-slider"><img src="images/home/slider/hill.png" class="slider-hill" alt="slider image"></div><div class="carousel-caption"><h1 id="slider-tweets" >'+response[i].text+'</h1><p id="slider-tweets-meta" >'+formatDate(response[i].created_at)+'</p></div></div>');
-									
-									}
-						 if(response.length==0){
-									var i=0;
-									$('.carousel-indicators').append('<li data-target="#carousel-tweets" data-slide-to="'+i+'" '+((i==0)?'class="active"':'')+' ></li>');
-									$('.carousel-inner').append('<div class="item '+((i==0)?'active':'')+' "><div class="main-slider"><img src="images/home/slider/hill.png" class="slider-hill" alt="slider image"></div><div class="carousel-caption"><h1 id="slider-tweets" >@'+screen_name+' has no tweets!!</h1><p id="slider-tweets-meta" > Select search another user!</p></div></div>');
+							for(var i = 0; i < response.length; i++){
+								//console.log(response[i].text);
+								$('.carousel-indicators').append('<li data-target="#carousel-tweets" data-slide-to="'+i+'" '+((i==0)?'class="active"':'')+' ></li>');
+								$('.carousel-inner').append('<div class="item '+((i==0)?'active':'')+' "><div class="main-slider"><img src="images/home/slider/hill.png" class="slider-hill" alt="slider image"></div><div class="carousel-caption"><h1 id="slider-tweets" >'+response[i].text+'</h1><p id="slider-tweets-meta" >'+formatDate(response[i].created_at)+'</p></div></div>');
+							
+							}
+							if(response.length==0){
+								var i=0;
+								$('.carousel-indicators').append('<li data-target="#carousel-tweets" data-slide-to="'+i+'" '+((i==0)?'class="active"':'')+' ></li>');
+								$('.carousel-inner').append('<div class="item '+((i==0)?'active':'')+' "><div class="main-slider"><img src="images/home/slider/hill.png" class="slider-hill" alt="slider image"></div><div class="carousel-caption"><h1 id="slider-tweets" >@'+screen_name+' has no tweets!!</h1><p id="slider-tweets-meta" > Select search another user!</p></div></div>');
+								$('#user_tweets_download_link').attr('href','javascript:void(0);');
+							}else{
+								
+								$('#user_tweets_download_link').attr('href','download_tweets_pdf.php/?screen_name='+screen_name+'');
+								$('#user_tweets_download_button').removeAttr('disabled');
 							}
 							
 						 }  

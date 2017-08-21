@@ -9,8 +9,8 @@ include_once 'src/twitteroauth.php';
 /*
  * Configuration and setup Twitter API
  */
-$consumerKey = 'vj1IqmVqjWIr1oJxbyvnxHWv5';
-$consumerSecret = '0Ls7WAjaqqICaATriM78TXetPsONBrVIPtqV9I0fqOpohCD1tx';
-$redirectURL = 'http://ttcvaibhav.tk/index.php';
+$consumerKey = 'nduWGL8Um028VE2jDOF1vLHuP';
+$consumerSecret = 'mzDHYWNpUO2zbxOVYIFQKHvENmd8ovYinjiobalMmBFI1tWlod';
+$redirectURL = 'http://www.ttcvaibhav.ml/index.php';
 
 ?>

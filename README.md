@@ -1,4 +1,4 @@
-# Twitter-Timeline-challenge-RTCamp (http://www.ttcvaibhav.ml/)
+# Twitter-Timeline-challenge-RTCamp 
 I have completed this twitter timeline challenge given by RTCamp company. 
 
 # Twitter-Timeline Challenge
